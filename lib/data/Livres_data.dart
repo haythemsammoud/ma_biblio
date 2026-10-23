@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ma_biblio/Models/Livre.dart';
+import '../Models/livre.dart';
 
 final List<Livre> livres = [
   Livre(
@@ -9,7 +9,7 @@ final List<Livre> livres = [
     genre: 'Jeunesse',
     annee: 1943,
     note: 4.8,
-    couleur: Color(0xFF0288D1),
+    couleur: const Color(0xFF0288D1),
   ),
   Livre(
     id: 2,
@@ -18,7 +18,7 @@ final List<Livre> livres = [
     genre: 'Roman',
     annee: 1942,
     note: 4.3,
-    couleur: Color(0xFFE64A19),
+    couleur: const Color(0xFFE64A19),
   ),
   Livre(
     id: 3,
@@ -27,7 +27,7 @@ final List<Livre> livres = [
     genre: 'Science',
     annee: 1988,
     note: 4.5,
-    couleur: Color(0xFF283593),
+    couleur: const Color(0xFF283593),
     nouveaute: true,
   ),
   Livre(
@@ -37,7 +37,7 @@ final List<Livre> livres = [
     genre: 'Histoire',
     annee: 2011,
     note: 4.6,
-    couleur: Color(0xFF6D4C41),
+    couleur: const Color(0xFF6D4C41),
     nouveaute: true,
   ),
   Livre(
@@ -47,7 +47,7 @@ final List<Livre> livres = [
     genre: 'Informatique',
     annee: 2008,
     note: 4.4,
-    couleur: Color(0xFF2E7D32),
+    couleur: const Color(0xFF2E7D32),
     nouveaute: true,
   ),
   Livre(
@@ -57,7 +57,7 @@ final List<Livre> livres = [
     genre: 'Roman',
     annee: 1844,
     note: 4.9,
-    couleur: Color(0xFF5E35B1),
+    couleur: const Color(0xFF5E35B1),
   ),
   Livre(
     id: 7,
@@ -66,7 +66,7 @@ final List<Livre> livres = [
     genre: 'Science',
     annee: 1980,
     note: 4.5,
-    couleur: Color(0xFF00838F),
+    couleur: const Color(0xFF00838F),
   ),
   Livre(
     id: 8,
@@ -75,7 +75,7 @@ final List<Livre> livres = [
     genre: 'Histoire',
     annee: 1377,
     note: 4.7,
-    couleur: Color(0xFFF9A825),
+    couleur: const Color(0xFFF9A825),
   ),
   Livre(
     id: 9,
@@ -84,7 +84,7 @@ final List<Livre> livres = [
     genre: 'Jeunesse',
     annee: 1997,
     note: 4.7,
-    couleur: Color(0xFFC2185B),
+    couleur: const Color(0xFFC2185B),
     nouveaute: true,
   ),
   Livre(
@@ -94,7 +94,7 @@ final List<Livre> livres = [
     genre: 'Informatique',
     annee: 1999,
     note: 4.6,
-    couleur: Color(0xFF455A64),
+    couleur: const Color(0xFF455A64),
   ),
   Livre(
     id: 11,
@@ -103,7 +103,7 @@ final List<Livre> livres = [
     genre: 'Roman',
     annee: 1862,
     note: 4.8,
-    couleur: Color(0xFFAD1457),
+    couleur: const Color(0xFFAD1457),
   ),
   Livre(
     id: 12,
@@ -112,6 +112,6 @@ final List<Livre> livres = [
     genre: 'Science',
     annee: 1976,
     note: 4.2,
-    couleur: Color(0xFF558B2F),
+    couleur: const Color(0xFF558B2F),
   ),
 ];

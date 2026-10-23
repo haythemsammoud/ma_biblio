@@ -1,107 +1,147 @@
 import 'package:flutter/material.dart';
-import 'package:ma_biblio/Models/Livre.dart';
-import 'package:ma_biblio/data/Livres_data.dart';
+import '../Models/livre.dart';
 
+// Q3.1 : StatefulWidget car l'état (cases cochées) change et l'écran doit
+// se redessiner via setState. Un StatelessWidget est immuable.
 class MaListeScreen extends StatefulWidget {
-  const MaListeScreen({super.key});
+  final List<Livre> livres;
+  final VoidCallback onModifie;
+  final VoidCallback onParametres;
+
+  const MaListeScreen({
+    super.key,
+    required this.livres,
+    required this.onModifie,
+    required this.onParametres,
+  });
 
   @override
   State<MaListeScreen> createState() => _MaListeScreenState();
 }
 
 class _MaListeScreenState extends State<MaListeScreen> {
-  // Q3.2 : afficher uniquement les nouveautés
-  bool _nouveautesSeulement = false;
+  bool _nouveautesSeulement = false; // Q3.2
 
-  // Q3.3 : les cinq genres sont cochés au départ
+  // Q3.3
   final Map<String, bool> _genres = {
     'Roman': true,
     'Science': true,
     'Histoire': true,
-    'Informatique': true,
     'Jeunesse': true,
+    'Informatique': true,
   };
+
+  // Q3.4
+  final Map<String, IconData> _icones = {
+    'Roman': Icons.auto_stories,
+    'Science': Icons.science,
+    'Histoire': Icons.account_balance,
+    'Jeunesse': Icons.child_care,
+    'Informatique': Icons.computer,
+  };
+
+  // Q3.6 : true = tous cochés, false = aucun, null = mélange (tiret)
+  bool? get _tous {
+    final valeurs = _genres.values;
+    if (valeurs.every((v) => v)) return true;
+    if (valeurs.every((v) => !v)) return false;
+    return null;
+  }
+
+  // Q3.7 : livres filtrés
+  List<Livre> get _filtres => widget.livres
+      .where(
+        (l) =>
+            _genres[l.genre] == true && (!_nouveautesSeulement || l.nouveaute),
+      )
+      .toList();
 
   @override
   Widget build(BuildContext context) {
-    // Q3.8 : calcul des livres affichés après filtrage
-    final livresAffiches = livres.where((livre) {
-      final genreSelectionne = _genres[livre.genre] ?? false;
-      final nouveauteAcceptee = !_nouveautesSeulement || livre.nouveaute;
-
-      return genreSelectionne && nouveauteAcceptee;
-    }).toList();
-
-    final nombreLus = livresAffiches.where((livre) => livre.lu).length;
+    final filtres = _filtres;
+    final lus = filtres.where((l) => l.lu).length;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lus : $nombreLus / ${livresAffiches.length}'),
+        title: Text('Lus : $lus / ${filtres.length}'), // Q3.8
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: widget.onParametres,
+          ),
+        ],
       ),
-      body: Column(
+      body: ListView(
         children: [
-          // Q3.2 : case pour filtrer les nouveautés
+          // Q3.2 : sans setState la variable change mais l'écran ne se redessine pas
           CheckboxListTile(
             title: const Text('Afficher uniquement les nouveautés'),
             value: _nouveautesSeulement,
-            onChanged: (bool? valeur) {
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (v) => setState(() => _nouveautesSeulement = v ?? false),
+          ),
+          const Divider(),
+
+          // Q3.6 : case "Tous" à 3 états
+          CheckboxListTile(
+            title: const Text(
+              'Tous les genres',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            tristate: true,
+            value: _tous,
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (_) {
               setState(() {
-                _nouveautesSeulement = valeur ?? false;
+                final cocher = _tous != true;
+                for (final g in _genres.keys) {
+                  _genres[g] = cocher;
+                }
               });
             },
           ),
 
-          const Divider(),
-
-          // Q3.3 : générer les cases des cinq genres
+          // Q3.3 + Q3.4 + Q3.5
           ..._genres.keys.map((genre) {
+            final nb = widget.livres.where((l) => l.genre == genre).length;
             return CheckboxListTile(
               title: Text(genre),
-              value: _genres[genre],
-              activeColor: Colors.indigo,
+              subtitle: Text('$nb livre${nb > 1 ? 's' : ''}'),
+              secondary: Icon(_icones[genre]),
+              activeColor: Colors.teal,
+              // .leading = case à gauche ; .trailing = à droite ;
+              // .platform = selon la plateforme (à droite sur Android)
               controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (bool? valeur) {
-                setState(() {
-                  _genres[genre] = valeur ?? false;
-                });
-              },
+              value: _genres[genre],
+              onChanged: (v) => setState(() => _genres[genre] = v ?? false),
             );
           }),
-
           const Divider(),
 
-          // Liste des livres filtrés
-          Expanded(
-            child: ListView.separated(
-              itemCount: livresAffiches.length,
-              separatorBuilder: (context, index) => const Divider(indent: 16),
-              itemBuilder: (context, index) {
-                final livre = livresAffiches[index];
-
-                return CheckboxListTile(
-                  value: livre.lu,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  secondary: CircleAvatar(
-                    backgroundColor: livre.couleur,
-                    child: const Icon(Icons.book, color: Colors.white),
+          // Q3.7 : liste imbriquée dans un ListView -> shrinkWrap + physics
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: filtres.length,
+            separatorBuilder: (context, i) => const Divider(height: 1),
+            itemBuilder: (context, i) {
+              final l = filtres[i];
+              return CheckboxListTile(
+                value: l.lu,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(
+                  l.titre,
+                  style: TextStyle(
+                    decoration: l.lu ? TextDecoration.lineThrough : null,
                   ),
-                  title: Text(
-                    livre.titre,
-                    style: TextStyle(
-                      decoration: livre.lu
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
-                  ),
-                  subtitle: Text(livre.auteur),
-                  onChanged: (bool? valeur) {
-                    setState(() {
-                      livre.lu = valeur ?? false;
-                    });
-                  },
-                );
-              },
-            ),
+                ),
+                subtitle: Text(l.auteur),
+                onChanged: (v) {
+                  setState(() => l.lu = v ?? false);
+                  widget.onModifie(); // sauvegarde (Q7.9)
+                },
+              );
+            },
           ),
         ],
       ),
