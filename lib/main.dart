@@ -4,7 +4,7 @@ import 'Models/livre.dart';
 import 'Screens/catalogue_screen.dart';
 import 'Screens/galerie_screen.dart';
 import 'Screens/ma_liste_screen.dart';
-import 'Screens/parametres_screen.dart';
+import 'Screens/Parametres_screen.dart';
 import 'Services/Livre_service.dart';
 
 void main() => runApp(const MyApp());
