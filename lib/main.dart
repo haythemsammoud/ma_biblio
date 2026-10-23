@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'screens/parametres_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,8 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MaBiblio',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
-      home: const HomePage(),
+      theme: ThemeData(useMaterial3: true),
+      home: const ParametresScreen(),
     );
   }
 }
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('MaBiblio')),
-      body: const Center(child: Text('Bienvenue dans MaBiblio')),
+      body: const Center(child: Text('Bienvenue dans MaBiblio !')),
     );
   }
 }
